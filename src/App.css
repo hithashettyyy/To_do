@@ -1,0 +1,161 @@
+/* styling the header */
+
+h1 {
+  font-family: "Poetsen One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 40px;
+  color: rgb(70, 45, 11);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.tasks_list{
+   display: flex;
+   flex-direction: column;
+}
+
+/* styling each task */
+.individual_tasks {
+  margin-top: 10px;
+  display: flex;
+  border: none;
+  width: 600px;
+  height: 50px;
+  background-color: rgba(110, 73, 9, 0.4);
+}
+
+.task-name {
+  margin-top: 12px;
+  margin-left: 10px;
+  font-family: "Dancing script",cursive;
+  font-size: 30px;
+  font-weight: 900;
+  color: rgb(69, 44, 12);
+}
+
+.checkbox {
+  margin-left: 10px;
+}
+
+
+/* styling the task buttons */
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+
+.active-tasks-button {
+  border: white;
+  height: 50px;
+  width: 150px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.completed-tasks-button {
+  border: white;
+  height: 50px;
+  width: 150px;
+  text-align: center;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+button {
+  background-color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  font-weight: normal;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity: 0.5;
+}
+
+
+/* container for the addtask and searchbar components */
+
+.inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+@media only screen and (min-width:601px) {
+  h1 {
+    text-align: center;
+  }
+
+  .inputs {
+    justify-content: center;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .tasks_list{
+    align-items: center;
+  }
+
+  .individual_tasks{
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width:600px){
+  h1 {
+    text-align: center;
+  }
+     .inputs{
+      justify-content: center;
+      flex-direction: column;
+     }
+     .buttons {
+      flex-direction: column;
+      align-content: space-evenly;
+    }
+    .completed-tasks-button{
+      margin-left: 0px;
+      margin-top: 5px;
+    }
+     .tasks_list{
+       width: 100vw;
+     }
+}
+
+@media only screen and (max-width:319px){
+
+  h1 {
+    text-align: center;
+  }
+
+    .buttons{
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0%;
+    }
+    .completed-tasks-button{
+      margin-left: 0px;
+      margin-top: 5px;
+    }
+    .tasks_list{
+      width: 100%;
+    }
+    .individual_tasks{
+      width: 100%;
+    }
+    .completed-tasks-button{
+       margin-left: 0px;
+    }
+}
+

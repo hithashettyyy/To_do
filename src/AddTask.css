@@ -1,0 +1,27 @@
+
+/* input for adding a new task */
+
+.add-task-input{
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid  grey;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.add-task-input[placeholder]{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+
+/* button to add new task */
+.add{
+    margin-left: 10px;
+    height: 40px;
+    width: 70px;
+    border: none;
+    font-weight: bold;
+}
+
+
+

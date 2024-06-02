@@ -15,11 +15,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 React components
 Props
 State
+Router
 
 ## Features present
 Viewing the active and completed tasks
-Adding new tasks
+Adding new tasks 
 Searching tasks
+New page for adding new tasks
 
 
 

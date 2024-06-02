@@ -32,4 +32,36 @@
 }
 
 
+/* styling the message */
+.message{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.message-container{
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    background-color: rgba(0,0,0,0.5);
+    margin-top: 40px;
+}
+
+.close{
+    border: none;
+    background-color: none;
+    width: fit-content;
+    margin: 7px;
+    align-items: flex-end;
+}
+
+p{
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
 

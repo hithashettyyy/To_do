@@ -1,3 +1,10 @@
+.add_container{
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
 
 /* input for adding a new task */
 
@@ -6,6 +13,7 @@
     border-radius: 20px;
     border: 1px solid  grey;
     background-color: rgba(255, 255, 255, 0.4);
+    
 }
 
 .add-task-input[placeholder]{

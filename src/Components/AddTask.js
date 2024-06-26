@@ -1,5 +1,5 @@
 import React from 'react'
-import "./AddTask.css"
+import "../Stylesheets/AddTask.css"
 
 
 function AddTask(props) {

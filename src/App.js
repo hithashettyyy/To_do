@@ -1,86 +1,100 @@
-import "./App.css";
-import Home from "./Home.js"
-import AddTask from "./AddTask.js";
-import { useState } from "react";
-import {Route,Routes} from "react-router-dom"
-import {Link} from "react-router-dom";
-import { useEffect } from "react";
+import "./Stylesheets/App.css";
+import Home from "./Components/Home.js"
+import AddTask from "./Components/AddTask.js";
+import { Route, Routes } from "react-router-dom"
+import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import axios from 'axios'
+
+//redux 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setAllTasksList,
+  setActiveTasksList,
+  setCompletedTasksList,
+  setCurrentInput,
+  setSearchValue,
+  setDisplayList,
+  setMatchedItems,
+  setTaskAdded
+} from './redux/tasksActions.js'
 
 function App() {
 
-  const [allTasksList, setAllTasksList] = useState([]);
-  const [activeTasksList, setActiveTasksList] = useState([]);
-  const [completedTasksList, setCompletedTasksList] = useState([]);
-  const [currentInput, setCurrentInput] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [matchedItems,setMatchedItems] = useState([]);
-  const [displayList,setDisplayList] = useState("active");
-  const [taskAdded,setTaskAdded] = useState(false);
+  const dispatch = useDispatch()
 
-  useEffect(()=>{
-      axios.get('https://jsonplaceholder.typicode.com/todos')
-         .then(res=>{
-             setAllTasksList(res.data)
-         })
-         .catch(err=>{
-            console.log(err)
-         })
+  const allTasksList = useSelector(state => state.allTasksList);
+  const activeTasksList = useSelector(state => state.activeTasksList);
+  const completedTasksList = useSelector(state => state.completedTasksList);
+  const currentInput = useSelector(state => state.currentInput);
+  const searchValue = useSelector(state => state.searchValue);
+  const matchedItems = useSelector(state => state.matchedItems);
+  const displayList = useSelector(state => state.displayList);
+  const taskAdded = useSelector(state => state.taskAdded);
 
-  },[])
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+      .then(res => {
+        dispatch(setAllTasksList(res.data))
+      })
+      .catch(err => {
+        console.log(err)
+      })
 
-  useEffect(()=>{
-      setActiveTasksList(allTasksList.filter(task=>!task.completed)) 
-      setCompletedTasksList(allTasksList.filter(task=>task.completed))
-  },[allTasksList])
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(setActiveTasksList(allTasksList.filter(task => !task.completed)))
+    dispatch(setCompletedTasksList(allTasksList.filter(task => task.completed)))
+  }, [allTasksList, dispatch])
 
   //event listeners for the buttons and input
   const activeTasksButton = () => {
-    setDisplayList("active");
-    
+    dispatch(setDisplayList("active"))
+
   };
 
   const completedTasksButton = () => {
-     setDisplayList("completed");
+    dispatch(setDisplayList("completed"));
   };
 
   const addButton = () => {
+
     const newTaskTitle = currentInput;
     if (newTaskTitle !== "") {
       const newTask = {
-        userId: activeTasksList.length,
-        id : activeTasksList.length,
+        userId: activeTasksList.length % 20,
+        id: activeTasksList.length,
         title: newTaskTitle,
         completed: false,
       }
       const newTask2 = {
-        userId : allTasksList.length,
-        id : allTasksList.length,
+        userId: allTasksList.length % 20,
+        id: allTasksList.length,
         title: newTaskTitle,
         completed: false,
       }
-      setActiveTasksList([...activeTasksList, newTask]);
-      setAllTasksList([...allTasksList,newTask2])
-      setCurrentInput("");
-      setDisplayList("active");
-      setTaskAdded(true);
+
+      dispatch(setAllTasksList([...allTasksList, newTask2]))
+      dispatch(setActiveTasksList([...activeTasksList, newTask]))
+      dispatch(setCurrentInput(""))
+      dispatch(setDisplayList("active"))
+      dispatch(setTaskAdded(true))
     }
-      
-  };
+  }
 
   const closeButton = () => {
-      setTaskAdded(false);
+    dispatch(setTaskAdded(false))
   }
 
   //when user enters into input to add a task
   const enterInput = (e) => {
-    setCurrentInput(e.target.value);
-    console.log(currentInput);
-  };
+    dispatch(setCurrentInput(e.target.value))
+  }
 
   const filterCheckedTasks = (task, taskToMove) => {
-    return task.title !== taskToMove;
-  };
+    return task.title !== taskToMove
+  }
 
 
   //when user clicks on the checkbox
@@ -88,263 +102,95 @@ function App() {
     let taskToMove = title;
     const updatedActiveList = activeTasksList.filter((task) =>
       filterCheckedTasks(task, taskToMove)
-    );
-    setActiveTasksList(updatedActiveList);
-    
-    setCompletedTasksList([
+    )
+    dispatch(setActiveTasksList(updatedActiveList))
+
+    dispatch(setCompletedTasksList([
       ...completedTasksList,
       { title: taskToMove, completed: true },
-    ]);
-    setDisplayList("active");
-  };
-
-  //event listeners for search
-  const onSearch = (e)=>{
-    setSearchValue(e.target.value);
+    ]))
+    dispatch(setDisplayList("active"))
   }
 
-   //to filter out the search item
+  //event listeners for search
+  const onSearch = (e) => {
+    dispatch(setSearchValue(e.target.value))
+  }
+
+  //to filter out the search item
   const searchItems = (task, value) => {
-    return task.title.toLowerCase() === (value.toLowerCase());
-  };
+    return task.title.toLowerCase() === (value.toLowerCase())
+  }
 
   const handleSearchButton = () => {
     const value = searchValue.trim();
     if (value !== "") {
-      const matchedItemsList = allTasksList.filter((task) =>
+      const matchedItemsList1 = activeTasksList.filter((task) =>
         searchItems(task, value)
       );
-      setSearchValue("");
-      setMatchedItems(matchedItemsList);
-      console.log(matchedItems);
-      setDisplayList("matched");
+      const matchedItemsList2 = completedTasksList.filter((task) =>
+        searchItems(task, value)
+      );
+      dispatch(setSearchValue(""))
+      dispatch(setMatchedItems([...matchedItemsList1, ...matchedItemsList2]))
+      dispatch(setDisplayList("matched"))
     }
-  };
+  }
 
- 
+
 
   return (
     <>
 
-    <nav>
-      <ul>
-        <li>
+      <nav>
+        <ul>
+          <li>
             <Link to="/">Home</Link>
-        </li>
-        <li>
-            <Link to="/add">Add Task</Link>
-        </li>
-      </ul>
-    </nav>
+          </li>
+          <li>
+            <Link to="/add">AddTask</Link>
+          </li>
+        </ul>
+      </nav>
 
-    <Routes>
-      <Route path="/" 
-             element = {<Home
-              currentInput = {currentInput}
-              searchValue = {searchValue}
-              allTasksList = {allTasksList}
-              activeTasksList = {activeTasksList}
-              completedTasksList = {completedTasksList}
-              matchedItems = {matchedItems}
-              displayList = {displayList}
-              addButton = {addButton}
-              enterInput = {enterInput}
-              filterCheckedTasks = {filterCheckedTasks}
-              handleCheckBox = {handleCheckBox}
-              onSearch = {onSearch}
-              searchItems = {searchItems}
-              handleSearchButton = {handleSearchButton}
-              activeTasksButton = {activeTasksButton}
-              completedTasksButton = {completedTasksButton}
-      />}
-      />
-      <Route path="/add" 
-             element = {<AddTask handleInput = {enterInput}
-                                 handleClick={addButton}
-                                 currentInput={currentInput}    
-                                 taskAdded = {taskAdded}
-                                 closeButton = {closeButton}
-                       />}
-      />
-    </Routes>
+      <Routes>
+        <Route path="/"
+          element={<Home
+            currentInput={currentInput}
+            searchValue={searchValue}
+            allTasksList={allTasksList}
+            activeTasksList={activeTasksList}
+            completedTasksList={completedTasksList}
+            matchedItems={matchedItems}
+            displayList={displayList}
+            addButton={addButton}
+            enterInput={enterInput}
+            filterCheckedTasks={filterCheckedTasks}
+            handleCheckBox={handleCheckBox}
+            onSearch={onSearch}
+            searchItems={searchItems}
+            handleSearchButton={handleSearchButton}
+            activeTasksButton={activeTasksButton}
+            completedTasksButton={completedTasksButton}
+          />}
+        />
+        <Route path="/add"
+          element={<AddTask handleInput={enterInput}
+            handleClick={addButton}
+            currentInput={currentInput}
+            taskAdded={taskAdded}
+            closeButton={closeButton}
+          />}
+        />
+      </Routes>
 
-      
+
     </>
   );
 }
 
 export default App;
 
-
-
-
-
-
-
-// import "./App.css";
-// import tasks from "./tasks.json";
-// import Home from "./Home.js"
-// import AddTask from "./AddTask.js";
-// import { useState } from "react";
-// import {Route,Routes} from "react-router-dom"
-// import {Link} from "react-router-dom";
-
-// function App() {
-
-//   //creating filtered lists for active and completed tasks
-//   const filterActive = (task) => {
-//     if (task.completed == false) return task;
-//   };
-//   const filterCompleted = (task) => {
-//     if (task.completed == true) return task;
-//   };
-
-//   const active = tasks.filter(filterActive);
-//   const completed = tasks.filter(filterCompleted);
-
-//   //state declarations
-//   const [currentInput, setCurrentInput] = useState("");
-//   const [searchValue, setSearchValue] = useState("");
-
-//   const [allTasksList, setAllTasksList] = useState(tasks);
-//   const [activeTasksList, setActiveTasksList] = useState(active);
-//   const [completedTasksList, setCompletedTasksList] = useState(completed);
-//   const [matchedItems,setMatchedItems] = useState([]);
-  
-//   const [displayList,setDisplayList] = useState("active");
-//   const [taskAdded,setTaskAdded] = useState(false);
-
-//   //event listeners for the buttons and input
-//   const activeTasksButton = () => {
-//     setDisplayList("active");
-    
-//   };
-
-//   const completedTasksButton = () => {
-//      setDisplayList("completed");
-//   };
-
-//   const addButton = () => {
-//     const newTaskTitle = currentInput;
-//     if (newTaskTitle !== "") {
-//       const newTask = {
-//         title: newTaskTitle,
-//         completed: false,
-//       };
-//       setAllTasksList([...allTasksList],newTask);
-//       setActiveTasksList([...activeTasksList, newTask]);
-//       setCurrentInput("");
-//       setDisplayList("active");
-//       setTaskAdded(true);
-//     }
-//   };
-
-//   const closeButton = () => {
-//       setTaskAdded(false);
-//   }
-
-//   //when user enters into input to add a task
-//   const enterInput = (e) => {
-//     setCurrentInput(e.target.value);
-//     console.log(currentInput);
-//   };
-
-//   const filterCheckedTasks = (task, taskToMove) => {
-//     return task.title !== taskToMove;
-//   };
-
-
-//   //when user clicks on the checkbox
-//   const handleCheckBox = (title) => {
-//     let taskToMove = title;
-//     const updatedActiveList = activeTasksList.filter((task) =>
-//       filterCheckedTasks(task, taskToMove)
-//     );
-//     setActiveTasksList(updatedActiveList);
-    
-//     setCompletedTasksList([
-//       ...completedTasksList,
-//       { title: taskToMove, completed: true },
-//     ]);
-//     setDisplayList("active");
-//   };
-
-//   //event listeners for search
-//   const onSearch = (e)=>{
-//     setSearchValue(e.target.value);
-//   }
-
-//    //to filter out the search item
-//   const searchItems = (task, value) => {
-//     return task.title.toLowerCase() === (value.toLowerCase());
-//   };
-
-//   const handleSearchButton = () => {
-//     const value = searchValue.trim();
-//     if (value !== "") {
-//       const matchedItemsList = allTasksList.filter((task) =>
-//         searchItems(task, value)
-//       );
-//       setSearchValue("");
-//       setMatchedItems(matchedItemsList);
-//       console.log(matchedItems);
-//       setDisplayList("matched");
-//     }
-//   };
-
- 
-
-//   return (
-//     <>
-
-//     <nav>
-//       <ul>
-//         <li>
-//             <Link to="/">Home</Link>
-//         </li>
-//         <li>
-//             <Link to="/add">Add Task</Link>
-//         </li>
-//       </ul>
-//     </nav>
-
-//     <Routes>
-//       <Route path="/" 
-//              element = {<Home
-//               currentInput = {currentInput}
-//               searchValue = {searchValue}
-//               allTasksList = {allTasksList}
-//               activeTasksList = {activeTasksList}
-//               completedTasksList = {completedTasksList}
-//               matchedItems = {matchedItems}
-//               displayList = {displayList}
-//               addButton = {addButton}
-//               enterInput = {enterInput}
-//               filterCheckedTasks = {filterCheckedTasks}
-//               handleCheckBox = {handleCheckBox}
-//               onSearch = {onSearch}
-//               searchItems = {searchItems}
-//               handleSearchButton = {handleSearchButton}
-//               activeTasksButton = {activeTasksButton}
-//               completedTasksButton = {completedTasksButton}
-//       />}
-//       />
-//       <Route path="/add" 
-//              element = {<AddTask handleInput = {enterInput}
-//                                  handleClick={addButton}
-//                                  currentInput={currentInput}    
-//                                  taskAdded = {taskAdded}
-//                                  closeButton = {closeButton}
-//                        />}
-//       />
-//     </Routes>
-
-      
-//     </>
-//   );
-// }
-
-// export default App;
 
 
 

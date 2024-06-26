@@ -16,12 +16,14 @@ React components
 Props
 State
 Router
+Redux
 
 ## Features present
 Viewing the active and completed tasks
 Adding new tasks 
 Searching tasks
 New page for adding new tasks
+State managed by redux
 
 
 

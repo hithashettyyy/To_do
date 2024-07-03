@@ -1,6 +1,4 @@
 import {
-    SET_ACTIVE_TASKS_LIST,
-    SET_COMPLETED_TASKS_LIST,
     SET_ALL_TASKS_LIST,
     SET_CURRENT_INPUT, 
     SET_DISPLAY_LIST, 
@@ -12,8 +10,6 @@ import {
 
 const initialState = {
     allTasksList: [],
-    activeTasksList: [],
-    completedTasksList: [],
     currentInput: "",
     searchValue: "",
     displayList: "active",
@@ -28,12 +24,6 @@ const tasksReducer = (state = initialState, action) => {
 
         case SET_ALL_TASKS_LIST:
             return { ...state, allTasksList: action.payload }
-
-        case SET_ACTIVE_TASKS_LIST:
-            return { ...state, activeTasksList: action.payload }
-
-        case SET_COMPLETED_TASKS_LIST:
-            return { ...state, completedTasksList: action.payload }
 
         case SET_CURRENT_INPUT:
             return { ...state, currentInput: action.payload }

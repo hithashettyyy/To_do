@@ -1,7 +1,5 @@
 import {
     SET_ALL_TASKS_LIST,
-    SET_ACTIVE_TASKS_LIST,
-    SET_COMPLETED_TASKS_LIST,
     SET_CURRENT_INPUT,
     SET_SEARCH_VALUE,
     SET_MATCHED_ITEMS,
@@ -12,20 +10,6 @@ import {
 export const setAllTasksList = (tasks)=>(
     {
         type : SET_ALL_TASKS_LIST,
-        payload : tasks,
-    }
-)
-
-export const setActiveTasksList = (tasks)=>(
-    {
-        type : SET_ACTIVE_TASKS_LIST,
-        payload : tasks
-    }
-)
-
-export const setCompletedTasksList = (tasks)=>(
-    {
-        type : SET_COMPLETED_TASKS_LIST,
         payload : tasks,
     }
 )

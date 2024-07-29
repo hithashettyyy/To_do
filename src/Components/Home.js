@@ -1,5 +1,11 @@
 import React from 'react';
 import SearchBar from "./SearchBar.js";
+import EditBar from './EditBar.js';
+import { AiOutlineDelete } from "react-icons/ai";
+import { MdModeEditOutline } from "react-icons/md";
+import '../Stylesheets/App.css'
+import { useSelector } from 'react-redux';
+import { SiTask } from 'react-icons/si';
 
 function Home({
     searchValue,
@@ -10,8 +16,14 @@ function Home({
     onSearch,
     handleSearchButton,
     activeTasksButton,
-    completedTasksButton
+    completedTasksButton,
+    handleDelete,
+    editTask,
+    handleEdit
 }) {
+    
+    const editView = useSelector(state=>state.editView)
+
     const renderTask = (task) => (
         <div className="individual_tasks" key={task.id}>
             <input
@@ -23,6 +35,10 @@ function Home({
             <div className="task-name">
                 {task.title}
             </div>
+            <div className='icons-div'>
+                <MdModeEditOutline size={30} cursor='pointer' onClick={()=>editTask(task)} />
+                <AiOutlineDelete size={35} fill='black' cursor='pointer' onClick={() => handleDelete(task.id)} />
+            </div>
         </div>
     );
 
@@ -30,7 +46,7 @@ function Home({
         <>
             <h1 className="header">To do list</h1>
 
-            <div className="inputs">
+            <div className="inputs" id={editView==true ? 'hide' : ''}>
                 <SearchBar
                     searchVal={searchValue}
                     onSearch={onSearch}
@@ -38,7 +54,7 @@ function Home({
                 />
             </div>
 
-            <div className="buttons">
+            <div className="buttons" id={editView==true ? 'hide' : ''}>
                 <button className="active-tasks-button" onClick={activeTasksButton}>
                     Active Tasks
                 </button>
@@ -50,11 +66,17 @@ function Home({
                 </button>
             </div>
 
+            <div className='inputs' id={editView==false ? 'hide' : ''}>
+                <EditBar
+                    handleEdit={handleEdit}
+                />
+            </div>
+
             <div className="tasks_list">
                 {displayList === "active" &&
                     allTasksList
-                    .filter(task => !task.completed)
-                    .map(task => renderTask(task))
+                        .filter(task => !task.completed)
+                        .map(task => renderTask(task))
                 }
             </div>
 

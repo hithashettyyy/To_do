@@ -1,10 +1,13 @@
 import {
     SET_ALL_TASKS_LIST,
-    SET_CURRENT_INPUT, 
-    SET_DISPLAY_LIST, 
-    SET_MATCHED_ITEMS, 
-    SET_SEARCH_VALUE, 
-    SET_TASK_ADDED
+    SET_CURRENT_INPUT,
+    SET_DISPLAY_LIST,
+    SET_MATCHED_ITEMS,
+    SET_SEARCH_VALUE,
+    SET_TASK_ADDED,
+    SET_EDIT_VIEW,
+    SET_EDIT_TASK,
+    SET_EDIT_VALUE
 } from '../tasksActionTypes';
 
 
@@ -14,7 +17,10 @@ const initialState = {
     searchValue: "",
     displayList: "active",
     matchedItems: [],
-    taskAdded: false
+    taskAdded: false,
+    editView: false,
+    editTask: {},
+    editValue: ''
 }
 
 
@@ -39,7 +45,13 @@ const tasksReducer = (state = initialState, action) => {
 
         case SET_TASK_ADDED:
             return { ...state, taskAdded: action.payload }
-        default :
+        case SET_EDIT_VIEW:
+            return { ...state, editView: action.payload }
+        case SET_EDIT_TASK:
+            return { ...state, editTask: action.payload }
+        case SET_EDIT_VALUE:
+            return { ...state, editValue: action.payload }
+        default:
             return state
     }
 }
